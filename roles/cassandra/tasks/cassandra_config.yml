@@ -65,7 +65,7 @@
 
 - name: Install Datastax Community Cassandra & tools
   when: install_version == "dce"
-  apt: pkg={{item}} state=present
+  apt: pkg={{item}} state=present update_cache=true
   register: cassandra_installed_dce
   with_items:
   - dsc21={{ dsc_version }}
