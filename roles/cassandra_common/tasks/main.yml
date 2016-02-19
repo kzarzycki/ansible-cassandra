@@ -75,17 +75,22 @@
 - name: Add Datastax repository key
   shell: curl -L http://debian.datastax.com/debian/repo_key | apt-key add -
 
-- name: Add Oracle Java PPA repo
-  apt_repository: repo='ppa:webupd8team/java'
+- block:
+  - name: Add Oracle Java PPA repo
+    apt_repository: repo='ppa:webupd8team/java'
 
-- name: Accept Oracle license (1/2)
-  shell: "echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections"
+  - name: Accept Oracle license (1/2)
+    shell: "echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections"
 
-- name: Accept Oracle license (2/2)
-  shell: "echo debconf shared/accepted-oracle-license-v1-1 seen true | debconf-set-selections"
+  - name: Accept Oracle license (2/2)
+    shell: "echo debconf shared/accepted-oracle-license-v1-1 seen true | debconf-set-selections"
 
-- name: Update APT cache
-  apt: update_cache=true
+  - name: Update APT cache
+    apt: update_cache=true
+
+  - name: Install Oracle Java
+    apt: name=oracle-java7-installer state=latest
+  when: install_java
 
 - name: Install python-software-properties package
   apt: pkg=python-software-properties state=present
@@ -93,5 +98,3 @@
 - name: Install python-setuptools package
   apt: pkg=python-setuptools state=present
 
-- name: Install Oracle Java
-  apt: name=oracle-java7-installer state=latest
